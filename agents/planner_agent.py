@@ -1,4 +1,4 @@
-# PlannerAgent analyzes  natural language requirements and produces
+# PlannerAgent analyzes natural language requirements and produces
 # a structured development plan for the application.
 
 from typing import Dict, Any
@@ -19,7 +19,6 @@ class PlannerAgent:
       logger.info(f"Initializing PlannerAgent with model: {model_name}")
       self.mcp_client = mcp_client
       self.model_name = model_name
-      logger.info("PlannerAgent initialized successfully")
 
     def create_plan(self, requirement_text: str) -> Dict[str, Any]:
        """
@@ -27,8 +26,7 @@ class PlannerAgent:
        Model returns a JSON-like text, to parse later.
        """
        logger.info(f"=== Creating plan with PlannerAgent ===")
-       logger.info(f"Requirements length: {len(requirement_text)} characters")
-       logger.debug(f"Requirements preview: {requirement_text[:300]}...")
+       logger.debug(f"Requirements preview: {requirement_text[:150]}...")
 
        system_prompt = (
             "You are a senior software architect. "
@@ -39,9 +37,6 @@ class PlannerAgent:
             "3) key edge cases and test scenarios.\n"
             "Return the result as clearly labeled sections."
        )
-       
-       logger.info(f"System prompt length: {len(system_prompt)} characters")
-       logger.debug(f"System prompt: {system_prompt}")
 
        messages = [
           {"role": "system", "content": system_prompt},
@@ -58,5 +53,4 @@ class PlannerAgent:
            raise
 
        result = {"raw_plan": plan_text}
-       logger.info(f"=== PlannerAgent create_plan completed ===")
        return result
