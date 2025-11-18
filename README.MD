@@ -33,7 +33,7 @@ To use the Google Gemini API integration in `mcp_client.py`, you need to:
      
      **Command Prompt:**
      ```cmd
-     load-env.bat
+     scripts\load-env.bat
      ```
 
 3. **Option 2: Set environment variable manually**
@@ -53,7 +53,7 @@ To use the Google Gemini API integration in `mcp_client.py`, you need to:
 1. Clone the repository and navigate to the project directory
 2. Install dependencies: `pip install -r requirements.txt`
 3. Configure your API key in `.env`
-4. Load environment variables: `.\load-env.ps1`
+4. Load environment variables: `scripts\load-env.bat` (Command Prompt) or `.\load-env.ps1` (PowerShell)
 5. Run your application
 
 ## Dependencies
