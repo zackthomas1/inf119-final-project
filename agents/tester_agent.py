@@ -14,7 +14,7 @@ class TesterAgent:
       - Including clear comments explaining each test case.
     """
 
-    def __init__(self, mcp_client: MCPClient, model_name: str = "tester-model") -> None:
+    def __init__(self, mcp_client: MCPClient, model_name: str = "gemini-2.0-flash") -> None:
         logger.info(f"Initializing TesterAgent with model: {model_name}")
         self.mcp_client = mcp_client
         self.model_name = model_name
@@ -46,3 +46,5 @@ class TesterAgent:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ]
+
+        return self.mcp_client.call_model(self.model_name, messages)
