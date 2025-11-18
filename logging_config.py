@@ -12,7 +12,8 @@ def setup_logging(
     log_to_console: bool = True,
     log_file_name: str = None,
     max_file_size_mb: int = 10,
-    backup_count: int = 5
+    backup_count: int = 5,
+    include_full_path: bool = False
 ):
     """
     Configure comprehensive logging for the application.
@@ -24,6 +25,7 @@ def setup_logging(
         log_file_name: Custom log file name (default: ai_coder_YYYYMMDD.log)
         max_file_size_mb: Maximum size of each log file in MB
         backup_count: Number of backup log files to keep
+        include_full_path: Whether to include full file path instead of just filename
     """
     
     # Convert string level to logging constant
@@ -41,16 +43,30 @@ def setup_logging(
     
     log_file_path = os.path.join(logs_dir, log_file_name) if log_to_file else None
     
-    # Create formatter
-    detailed_formatter = logging.Formatter(
-        fmt='%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
-    )
-    
-    simple_formatter = logging.Formatter(
-        fmt='%(asctime)s - %(levelname)s - %(message)s',
-        datefmt='%H:%M:%S'
-    )
+    # Create formatters based on detail level
+    if include_full_path:
+        # Ultra-detailed formatter with full path
+        detailed_formatter = logging.Formatter(
+            fmt='%(asctime)s - %(name)s - %(levelname)s - %(pathname)s:%(funcName)s:%(lineno)d - %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+        )
+        
+        console_formatter = logging.Formatter(
+            fmt='%(asctime)s - %(levelname)s - %(pathname)s:%(lineno)d - %(message)s',
+            datefmt='%H:%M:%S'
+        )
+    else:
+        # Standard detailed formatter with filename only
+        detailed_formatter = logging.Formatter(
+            fmt='%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(funcName)s:%(lineno)d - %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+        )
+        
+        # Console formatter with filename for better debugging
+        console_formatter = logging.Formatter(
+            fmt='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
+            datefmt='%H:%M:%S'
+        )
     
     # Configure root logger
     root_logger = logging.getLogger()
@@ -63,7 +79,7 @@ def setup_logging(
     if log_to_console:
         console_handler = logging.StreamHandler(sys.stdout)
         console_handler.setLevel(numeric_level)
-        console_handler.setFormatter(simple_formatter)
+        console_handler.setFormatter(console_formatter)
         root_logger.addHandler(console_handler)
     
     # Add file handler with rotation
@@ -151,15 +167,3 @@ def log_system_info():
         logger.info(f"API key ends with: ...{api_key[-4:]}")
     
     logger.info("=" * 40)
-
-if __name__ == "__main__":
-    # Test the logging configuration
-    setup_logging(level="DEBUG")
-    
-    logger = get_app_logger()
-    logger.debug("This is a debug message")
-    logger.info("This is an info message")
-    logger.warning("This is a warning message")
-    logger.error("This is an error message")
-    
-    log_system_info()
