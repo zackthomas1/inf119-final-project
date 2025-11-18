@@ -13,7 +13,7 @@ from agents.planner_agent import PlannerAgent
 from agents.coder_agent import CoderAgent
 from agents.tester_agent import TesterAgent
 
-def run_pipeline(requirements: str) -> tuple[str, str, str]:
+def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
     """
     Run the full multi-agent pipeline on a single set of requirements. 
 
@@ -23,14 +23,15 @@ def run_pipeline(requirements: str) -> tuple[str, str, str]:
         - usage_report: Dict matching JSON structure
     """
 
-    usage_tracker - UsageTracker()
+    usage_tracker = UsageTracker()
     mcp_client = MCPClient(usage_tracker)
 
     planner = PlannerAgent(mcp_client)
-    coder = CoderAgent(mcp_client)
-    tester = TesterAgent(mcp_client)
+    # coder = CoderAgent(mcp_client)
+    # tester = TesterAgent(mcp_client)
 
     # PlannerAgent: create implementation plan
+    plan = planner.create_plane(requirements_text)
 
     # CodeAgent: generate application code
     generated_code = ""
