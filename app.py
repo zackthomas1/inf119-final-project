@@ -1,9 +1,10 @@
 import gradio as gr
 import json
+from typing import BinaryIO
 
 from orchestrator import run_pipeline
 
-def process_requirements(requirements_file, requirements_text: str) -> tuple[str, str, str, str]: 
+def process_requirements(requirements_file : BinaryIO | None, requirements_text: str) -> tuple[str, str, str, str]: 
     """
     gradio callback.
     Takes either an uploaded file or text area input and runs the pipline
