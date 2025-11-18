@@ -1,5 +1,8 @@
-#vs code
+# vs code
 .vscode/
+
+# project specific
+generated/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

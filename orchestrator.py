@@ -11,8 +11,9 @@ from model_tracker import UsageTracker
 from mcp_client import MCPClient
 from agents.planner_agent import PlannerAgent
 from logging_config import get_orchestrator_logger
-# from agents.coder_agent import CoderAgent
-# from agents.tester_agent import TesterAgent
+from agents.coder_agent import CoderAgent
+from agents.tester_agent import TesterAgent
+from utils import strip_markdown_formatting
 
 logger = get_orchestrator_logger()
 
@@ -40,8 +41,8 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
         raise
 
     planner = PlannerAgent(mcp_client)
-    # coder = CoderAgent(mcp_client)
-    # tester = TesterAgent(mcp_client)
+    coder = CoderAgent(mcp_client)
+    tester = TesterAgent(mcp_client)
 
     # PlannerAgent: create implementation plan
     logger.info("running PlannerAgent")
@@ -53,15 +54,21 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
         raise
 
     # CodeAgent: generate application code
-    logger.warning("CoderAgent not implemented")
-    generated_code = ""
+    raw_generated_code = coder.generate_code(requirements_text, plan)
+    generated_code = strip_markdown_formatting(raw_generated_code)
 
     # TesterAgent: generate test suite
-    logger.warning("TesterAgent not implemented")
-    generated_tests = ""
+    raw_generated_tests = tester.generate_tests(requirements_text, generated_code)
+    generated_tests = strip_markdown_formatting(raw_generated_tests)
 
     # persist artifacts
-    logger.warning("File persistence not implemented - generated/ folder not created")
+    logger.info("Persisting python code and test")
+    os.makedirs("generated", exist_ok=True)
+    with open("generated/generated_app.py", "w", encoding="utf-8") as f:
+        f.write(generated_code)
+
+    with open("generated/test_generated_app.py", "w", encoding="utf-8") as f:
+        f.write(generated_tests)
 
     # Prepare JSON-serializable usage report
     logger.info("Preparing usage report")
