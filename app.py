@@ -1,7 +1,9 @@
 import gradio as gr
 import json
 
-def process_requirements(requirements_file, requirements_text): 
+from orchestrator import run_pipeline
+
+def process_requirements(requirements_file, requirements_text: str) -> tuple[str, str, str, str]: 
     """
     gradio callback.
     Takes either an uploaded file or text area input and runs the pipline
@@ -12,8 +14,36 @@ def process_requirements(requirements_file, requirements_text):
         - usage report as pretty-printed JSON
         - textual instructions on how to run code/tests
     """
-    return ["hello", "world", "test", "this"]
+    if requirements_file is not None:
+        requirements = requirements_file.read().decode("utf-8")
+    else:
+        requirements = requirements_text or ""
 
+    if not requirements.strip():
+        return (
+            "ERROR: No requirements provided.",
+            "",
+            "{}",
+            "Please upload a file or paste the requirements into the text box.",
+        )
+
+    generated_code, generated_tests, usage_report = run_pipeline(requirements)
+
+    usage_json_str = json.dumps(usage_report, indent=2)
+
+    instructions = (
+        "How to run the generated code and tests:\n\n"
+        "1. After running this UI, the system writes files into the 'generated/' folder:\n"
+        "   - generated/generated_app.py\n"
+        "   - generated/test_generated_app.py\n\n"
+        "2. To run the application (if it has a main function):\n"
+        "   - python generated/generated_app.py\n\n"
+        "3. To run the tests (requires pytest installed):\n"
+        "   - python -m tests.run_tests\n"
+        "   (Or simply: pytest generated/test_generated_app.py)\n"
+    )
+
+    return generated_code, generated_tests, usage_json_str, instructions
 
 def main(): 
     """
