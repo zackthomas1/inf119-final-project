@@ -7,16 +7,15 @@ BudgetMaster is a budgeting software application that helps individuals effectiv
 # Setup Instructions
 
 ## Quick Start Guide
-
 1. Clone the repository and navigate to the project directory
 2. Create venv `python -m venv venv`. Activate venv environment `venv/Scripts/activate` (windows)
 3. Install dependencies: `pip install -r requirements.txt`
 4. Configure your API key in `.env`
 5. Load environment variables: `scripts\load-env.bat` (Command Prompt) or `.\load-env.ps1` (PowerShell)
-6. Run application by calling `python app.py` in command line
+6. Run application by calling `python app.py` in command line. 
+7. Access Gradio UI through url `http://127.0.0.1:7860/`
 
 ## Step-by-step Setup
-
 ### Cloning Repository
 Run the following to command to clone the project repository to current directory.
 ```
@@ -69,6 +68,8 @@ To use the Google Gemini API integration in `mcp_client.py`, you need to:
    # Linux/Mac
    export GEMINI_API_KEY=your-api-key-here
    ```
+## Running Test
+Project test suit can be run using the command `python run_test.py`.
 
 ## Security Notes
 - The `.env` file is automatically ignored by Git to protect your API keys
