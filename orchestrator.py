@@ -10,8 +10,11 @@ import os
 from model_tracker import UsageTracker
 from mcp_client import MCPClient
 from agents.planner_agent import PlannerAgent
-from agents.coder_agent import CoderAgent
-from agents.tester_agent import TesterAgent
+from logging_config import get_orchestrator_logger
+# from agents.coder_agent import CoderAgent
+# from agents.tester_agent import TesterAgent
+
+logger = get_orchestrator_logger()
 
 def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
     """
@@ -22,26 +25,52 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
         - genreated_tests: Python source code for tests
         - usage_report: Dict matching JSON structure
     """
+    logger.info("=== Starting multi-agent pipeline ===")
+    logger.debug(f"Requirements preview: {requirements_text[:200]}...")
 
+    logger.info("Initializing UsageTracker")
     usage_tracker = UsageTracker()
-    mcp_client = MCPClient(usage_tracker)
+    
+    logger.info("Initializing MCPClient")
+    try:
+        mcp_client = MCPClient(usage_tracker)
+        logger.info("MCPClient initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize MCPClient: {str(e)}", exc_info=True)
+        raise
 
     planner = PlannerAgent(mcp_client)
     # coder = CoderAgent(mcp_client)
     # tester = TesterAgent(mcp_client)
 
     # PlannerAgent: create implementation plan
-    plan = planner.create_plane(requirements_text)
+    logger.info("running PlannerAgent")
+    try:
+        plan = planner.create_plan(requirements_text)
+        logger.info("PlannerAgent completed successfully")
+    except Exception as e:
+        logger.error(f"PlannerAgent failed: {str(e)}", exc_info=True)
+        raise
 
     # CodeAgent: generate application code
+    logger.warning("CoderAgent not implemented")
     generated_code = ""
 
     # TesterAgent: generate test suite
+    logger.warning("TesterAgent not implemented")
     generated_tests = ""
 
     # persist artifacts
+    logger.warning("File persistence not implemented - generated/ folder not created")
 
     # Prepare JSON-serializable usage report
-    usage_report = {}
+    logger.info("Preparing usage report")
+    try:
+        usage_report = usage_tracker.to_dict()
+        logger.info(f"Usage report generated with {len(usage_report)} models tracked")
+    except Exception as e:
+        logger.error(f"Failed to generate usage report: {str(e)}", exc_info=True)
+        usage_report = {}
 
+    logger.info("=== Multi-agent pipeline completed ===")
     return generated_code, generated_tests, usage_report

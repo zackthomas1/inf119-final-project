@@ -3,6 +3,13 @@ import json
 from typing import BinaryIO
 
 from orchestrator import run_pipeline
+from logging_config import setup_logging, get_app_logger, log_system_info
+
+# Configure logging for the application
+setup_logging(level="INFO")
+logger = get_app_logger()
+# Log system information at startup
+log_system_info()
 
 def process_requirements(requirements_file : BinaryIO | None, requirements_text: str) -> tuple[str, str, str, str]: 
     """
@@ -15,12 +22,18 @@ def process_requirements(requirements_file : BinaryIO | None, requirements_text:
         - usage report as pretty-printed JSON
         - textual instructions on how to run code/tests
     """
+    logger.info("=== Processing requirements started ===")
+    
     if requirements_file is not None:
+        logger.info("Reading requirements from uploaded file")
         requirements = requirements_file.read().decode("utf-8")
+        logger.info(f"File content length: {len(requirements)} characters")
     else:
         requirements = requirements_text or ""
+        logger.info(f"Using text input, length: {len(requirements)} characters")
 
     if not requirements.strip():
+        logger.warning("No requirements provided - returning error")
         return (
             "ERROR: No requirements provided.",
             "",
@@ -28,7 +41,18 @@ def process_requirements(requirements_file : BinaryIO | None, requirements_text:
             "Please upload a file or paste the requirements into the text box.",
         )
 
-    generated_code, generated_tests, usage_report = run_pipeline(requirements)
+    logger.info("Starting pipeline execution")
+    try:
+        generated_code, generated_tests, usage_report = run_pipeline(requirements)
+        logger.info("Pipeline execution completed successfully")
+    except Exception as e:
+        logger.error(f"Pipeline execution failed: {str(e)}", exc_info=True)
+        return (
+            f"ERROR: Pipeline failed - {str(e)}",
+            "",
+            "{}",
+            "Pipeline execution encountered an error. Check logs for details."
+        )
 
     usage_json_str = json.dumps(usage_report, indent=2)
 
@@ -44,12 +68,15 @@ def process_requirements(requirements_file : BinaryIO | None, requirements_text:
         "   (Or simply: pytest generated/test_generated_app.py)\n"
     )
 
+    logger.info("=== Processing requirements completed ===")
     return generated_code, generated_tests, usage_json_str, instructions
 
 def main(): 
     """
     Create and launch Gradio UI. 
     """
+    logger.info("Initializing Gradio interface")
+    
     with gr.Blocks(title="IN4MATX 119 - AI Coder") as demo: 
         gr.Markdown(
             "# AI Coder (N4MATX 119 Final Project)\n"
@@ -97,7 +124,9 @@ def main():
             ],
         )
 
+    logger.info("Launching Gradio demo")
     demo.launch()
 
 if __name__ == '__main__': 
+    logger.info("application starting up")
     main()
