@@ -9,6 +9,8 @@ venv/Scripts/activate
 ```
 pip install -r requirements.txt
 ```
+## prompt
+BudgetMaster is a budgeting software application that helps individuals effectively manage their finances by providing comprehensive budgeting features. It allows users to input their income and expenses, categorize them, and set budget goals. The software provides visual representations of budget breakdowns and generates reports to track spending patterns. With BudgetMaster, users can make informed financial decisions and stay on track to achieve their financial goals.
 
 # Setup Instructions
 
