@@ -13,6 +13,7 @@ from agents.planner_agent import PlannerAgent
 from logging_config import get_orchestrator_logger
 from agents.coder_agent import CoderAgent
 from agents.tester_agent import TesterAgent
+from utils import strip_markdown_formatting
 
 logger = get_orchestrator_logger()
 
@@ -53,10 +54,12 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
         raise
 
     # CodeAgent: generate application code
-    generated_code = coder.generate_code(requirements_text, plan)
+    raw_generated_code = coder.generate_code(requirements_text, plan)
+    generated_code = strip_markdown_formatting(raw_generated_code)
 
     # TesterAgent: generate test suite
-    generated_tests = tester.generate_tests(requirements_text, generated_code)
+    raw_generated_tests = tester.generate_tests(requirements_text, generated_code)
+    generated_tests = strip_markdown_formatting(raw_generated_tests)
 
     # persist artifacts
     logger.info("Persisting python code and test")
