@@ -4,6 +4,7 @@
 from typing import Dict, Any
 from mcp_client import MCPClient
 from logging_config import get_coder_agent_logger
+from utils import strip_markdown_formatting, validate_python_syntax
 
 logger = get_coder_agent_logger()
 
@@ -47,4 +48,28 @@ class CoderAgent:
       {"role": "user", "content": user_prompt},
     ]
 
-    return self.mcp_client.call_model(self.model_name, messages)
+    max_retries = 3
+    
+    for attempt in range(max_retries):
+        logger.info(f"Generation attempt {attempt + 1}/{max_retries}")
+        response_text = self.mcp_client.call_model(self.model_name, messages)
+        
+        # Validate syntax
+        cleaned_code = strip_markdown_formatting(response_text)
+        is_valid, error_msg = validate_python_syntax(cleaned_code)
+        
+        if is_valid:
+            logger.info("Generated code passed syntax validation")
+            return response_text
+            
+        logger.warning(f"Generated code failed syntax validation: {error_msg}")
+        
+        if attempt < max_retries - 1:
+            messages.append({"role": "assistant", "content": response_text})
+            messages.append({
+                "role": "user", 
+                "content": f"The code you generated has a syntax error: {error_msg}\nPlease fix the syntax error and output the full corrected code."
+            })
+            
+    logger.error("Failed to generate valid syntax after max retries")
+    return response_text

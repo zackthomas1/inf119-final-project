@@ -1,5 +1,6 @@
 
 import re
+import ast
 
 def strip_markdown_formatting(text: str) -> str:
     """
@@ -28,3 +29,16 @@ def strip_markdown_formatting(text: str) -> str:
     text = text.strip()
     
     return text
+
+def validate_python_syntax(code: str) -> tuple[bool, str]:
+    """
+    Checks if the provided code string has valid Python syntax.
+    Returns (True, "Valid syntax") or (False, error_message).
+    """
+    try:
+        ast.parse(code)
+        return True, "Valid syntax"
+    except SyntaxError as e:
+        return False, f"SyntaxError: {e.msg} at line {e.lineno}"
+    except Exception as e:
+        return False, f"Validation Error: {str(e)}"

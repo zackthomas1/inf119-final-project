@@ -11,7 +11,7 @@ BudgetMaster is a budgeting software application that helps individuals effectiv
 2. Create venv `python -m venv venv`. Activate venv environment `venv/Scripts/activate` (windows)
 3. Install dependencies: `pip install -r requirements.txt`
 4. Configure your API key in `.env`
-5. Load environment variables: `scripts\load-env.bat` (Command Prompt) or `.\load-env.ps1` (PowerShell)
+5. Load environment variables: `scripts\load-env.bat` (Command Prompt) or `scripts\load-env.ps1` (PowerShell)
 6. Run application by calling `python app.py` in command line. 
 7. Access Gradio UI through url `http://127.0.0.1:7860/`
 
