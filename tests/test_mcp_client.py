@@ -1,4 +1,14 @@
 """
+File: test_mcp_client.py
+Authors: 
+    - [Zachery Thomas] ([47642149])
+    - [Collin Vinh Tran] ([47304556])
+    - [Jenny Thao Ly] ([83605957])
+    - [Lina Nguyen] ([70703520])
+Description: [What this file does (functions/methods used)]
+"""
+
+"""
 Test suite for MCPClient integration with Google Gemini API.
 Tests both successful API calls and error handling scenarios.
 """
