@@ -40,9 +40,19 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
         logger.error(f"Failed to initialize MCPClient: {str(e)}", exc_info=True)
         raise
 
-    planner = PlannerAgent(mcp_client)
-    coder = CoderAgent(mcp_client)
-    tester = TesterAgent(mcp_client)
+    # Specialist Architecture Configuration
+    # Planner: Reasoning model for architecture and edge cases
+    # Coder: High-quality coding model for implementation
+    # Tester: Fast model for high-volume test generation
+    PLANNER_MODEL = "gemini-1.5-pro"
+    CODER_MODEL = "gemini-1.5-pro"
+    TESTER_MODEL = "gemini-2.0-flash"
+
+    logger.info(f"Configuring Specialist Architecture: Planner={PLANNER_MODEL}, Coder={CODER_MODEL}, Tester={TESTER_MODEL}")
+
+    planner = PlannerAgent(mcp_client, model_name=PLANNER_MODEL)
+    coder = CoderAgent(mcp_client, model_name=CODER_MODEL)
+    tester = TesterAgent(mcp_client, model_name=TESTER_MODEL)
 
     # PlannerAgent: create implementation plan
     logger.info("running PlannerAgent")
