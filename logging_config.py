@@ -1,4 +1,14 @@
-# Module provides consistent logging setup across all components
+"""
+File: logging_config.py
+Authors: 
+    - [Zachery Thomas] ([47642149])
+    - [Collin Vinh Tran] ([47304556])
+    - [Jenny Thao Ly] ([83605957])
+    - [Lina Nguyen] ([70703520])
+Description: [
+- Module provides consistent logging setup across all components
+]
+"""
 
 import logging
 import logging.handlers
