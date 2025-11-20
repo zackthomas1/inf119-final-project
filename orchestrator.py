@@ -44,8 +44,8 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
     # Planner: Reasoning model for architecture and edge cases
     # Coder: High-quality coding model for implementation
     # Tester: Fast model for high-volume test generation
-    PLANNER_MODEL = "gemini-1.5-pro"
-    CODER_MODEL = "gemini-1.5-pro"
+    PLANNER_MODEL = "gemini-2.0-flash-thinking-exp"
+    CODER_MODEL = "gemini-2.5-pro"
     TESTER_MODEL = "gemini-2.0-flash"
 
     logger.info(f"Configuring Specialist Architecture: Planner={PLANNER_MODEL}, Coder={CODER_MODEL}, Tester={TESTER_MODEL}")
