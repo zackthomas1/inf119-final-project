@@ -64,7 +64,7 @@ class TestCoderAgentValidation(unittest.TestCase):
         
         # Verify the second call included the error message
         second_call_args = self.mock_mcp_client.call_model.call_args_list[1]
-        messages = second_call_args[0][1] # args[1] is messages
+        messages = second_call_args[0][2] # args[2] is messages
         self.assertEqual(len(messages), 4) # system, user, assistant(invalid), user(error)
         self.assertIn("SyntaxError", messages[-1]["content"])
 

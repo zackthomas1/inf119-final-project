@@ -49,7 +49,7 @@ class TestCoderAgentFixCode(unittest.TestCase):
         self.assertEqual(result, "def fixed(): pass")
         # Check if error output is in the prompt
         call_args = self.mock_mcp_client.call_model.call_args
-        messages = call_args[0][1]
+        messages = call_args[0][2]
         user_content = messages[1]['content']
         self.assertIn("error", user_content)
         self.assertIn("original", user_content)

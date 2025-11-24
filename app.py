@@ -14,7 +14,7 @@ log_system_info()
 def process_requirements(requirements_text: str) -> tuple[str, str, str, str]: 
     """
     gradio callback.
-    Takes either an uploaded file or text area input and runs the pipline
+    Takes text area input and runs the pipline
 
     Returns: 
         - generated code (string)
@@ -75,7 +75,7 @@ def main():
     with gr.Blocks(title="IN4MATX 119 - AI Coder") as demo: 
         gr.Markdown(
             "# AI Coder (IN4MATX 119 Final Project)\n"
-            "Upload the chosen software description or paste the requirements below"
+            "Upload the chosen software description or paste the requirements below."
             "System will generate Python code, tests, and a model usage report."
         )
 
