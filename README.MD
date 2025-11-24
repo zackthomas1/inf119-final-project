@@ -49,7 +49,7 @@ To use the Google Gemini API integration in `mcp_client.py`, you need to:
      
      **PowerShell:**
      ```powershell
-     .\load-env.ps1
+     scripts\load-env.ps1
      ```
      
      **Command Prompt:**

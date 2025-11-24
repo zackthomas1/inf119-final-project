@@ -24,22 +24,22 @@ class UsageTracker:
         self._usage: Dict[str, ModelUsage] = {}
         logger.info("UsageTracker initialized")
 
-    def record_call(self, model_name: str, tokens_used: int) -> None: 
+    def record_call(self, agent_name: str, model_name: str, tokens_used: int) -> None: 
         """
         Record a single API call to `model_name` and the number of tokens used. 
         Should be called every time a model is invoked via MCP.
         """
-        logger.debug(f"Recording call for model: {model_name}, tokens: {tokens_used}")
+        logger.debug(f"Recording call for model: {agent_name}, tokens: {tokens_used}")
 
-        if model_name not in self._usage:
-            logger.info(f"First call to model: {model_name} - creating new usage entry")
-            self._usage[model_name] = ModelUsage()
+        if agent_name not in self._usage:
+            logger.info(f"First call to model: {agent_name} - creating new usage entry")
+            self._usage[agent_name] = ModelUsage()
 
-        stats = self._usage[model_name]
+        stats = self._usage[agent_name]
         stats.num_api_calls += 1
         stats.total_tokens += tokens_used
         
-        logger.info(f"Model {model_name}: {stats.num_api_calls} calls, {stats.total_tokens} total tokens")
+        logger.info(f"Model {agent_name}: {stats.num_api_calls} calls, {stats.total_tokens} total tokens")
 
     def to_dict(self) -> Dict[str, Dict[str, int]]:
         """

@@ -19,6 +19,7 @@ class PlannerAgent:
       logger.info(f"Initializing PlannerAgent with model: {model_name}")
       self.mcp_client = mcp_client
       self.model_name = model_name
+      self.agent_name = "planner_agent"
 
     def create_plan(self, requirement_text: str) -> Dict[str, Any]:
        """
@@ -46,7 +47,7 @@ class PlannerAgent:
        logger.info(f"Calling model: {self.model_name}")
        
        try:
-           plan_text = self.mcp_client.call_model(self.model_name, messages=messages)
+           plan_text = self.mcp_client.call_model(self.agent_name, self.model_name, messages=messages)
            logger.info(f"Model call successful, plan text length: {len(plan_text)} characters")
        except Exception as e:
            logger.error(f"Model call failed: {str(e)}", exc_info=True)

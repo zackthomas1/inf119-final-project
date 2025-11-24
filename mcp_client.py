@@ -35,7 +35,7 @@ class MCPClient:
         genai.configure(api_key=api_key)
         logger.info("MCPClient initialized successfully")
 
-    def call_model(self, model_name: str, messages: List[Dict[str, str]]) -> str:
+    def call_model(self, agent_name: str, model_name: str, messages: List[Dict[str, str]]) -> str:
         """
         Call model via MCP 
         Each message as 'role' and 'cpmtemt' keys. 
@@ -112,7 +112,7 @@ class MCPClient:
             logger.info(f"Estimated tokens used: {tokens_used}")
             
             logger.info("Recording usage statistics")
-            self.usage_tracker.record_call(model_name=model_name, tokens_used=tokens_used)
+            self.usage_tracker.record_call(agent_name, model_name, tokens_used=tokens_used)
             
             logger.info(f"=== Model call completed successfully ===")
             return response_text

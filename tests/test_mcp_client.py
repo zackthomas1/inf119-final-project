@@ -50,7 +50,7 @@ class TestMCPClientGeminiIntegration(unittest.TestCase):
             client = MCPClient(self.usage_tracker)
             
             messages = [{"role": "user", "content": "Hello, how are you?"}]
-            result = client.call_model("gemini-2.0-flash", messages)
+            result = client.call_model("test_agent", "gemini-2.0-flash", messages)
             
             # Assertions
             self.assertEqual(result, "Hello! How can I help you today?")
@@ -59,9 +59,9 @@ class TestMCPClientGeminiIntegration(unittest.TestCase):
             
             # Check usage tracking
             usage_data = self.usage_tracker.to_dict()
-            self.assertIn("gemini-2.0-flash", usage_data)
-            self.assertEqual(usage_data["gemini-2.0-flash"]["numApiCalls"], 1)
-            self.assertGreater(usage_data["gemini-2.0-flash"]["totalTokens"], 0)
+            self.assertIn("test_agent", usage_data)
+            self.assertEqual(usage_data["test_agent"]["numApiCalls"], 1)
+            self.assertGreater(usage_data["test_agent"]["totalTokens"], 0)
 
     @patch('google.generativeai.configure')
     @patch('google.generativeai.GenerativeModel')
@@ -83,7 +83,7 @@ class TestMCPClientGeminiIntegration(unittest.TestCase):
                 {"role": "assistant", "content": "Python is a programming language."},
                 {"role": "user", "content": "Tell me more about it."}
             ]
-            result = client.call_model("gemini-2.0-flash", messages)
+            result = client.call_model("test_agent", "gemini-2.0-flash", messages)
             
             expected_prompt = (
                 "System: You are a helpful assistant.\n"
@@ -111,7 +111,7 @@ class TestMCPClientGeminiIntegration(unittest.TestCase):
             messages = [{"role": "user", "content": "Hello"}]
             
             with self.assertRaises(Exception) as context:
-                client.call_model("gemini-2.0-flash", messages)
+                client.call_model("test_agent", "gemini-2.0-flash", messages)
             
             self.assertIn("API rate limit exceeded", str(context.exception))
 
@@ -130,7 +130,7 @@ class TestMCPClientGeminiIntegration(unittest.TestCase):
             
             # Test with empty content
             messages = [{"role": "user", "content": ""}]
-            result = client.call_model("gemini-2.0-flash", messages)
+            result = client.call_model("test_agent", "gemini-2.0-flash", messages)
             
             self.assertEqual(result, "I see an empty message.")
             mock_model.generate_content.assert_called_once_with("")
@@ -150,21 +150,21 @@ class TestMCPClientGeminiIntegration(unittest.TestCase):
             
             # Make multiple calls
             messages = [{"role": "user", "content": "Test message"}]
-            client.call_model("gemini-2.0-flash", messages)
-            client.call_model("gemini-2.0-flash", messages)
-            client.call_model("gemini-2.5-flash", messages)
+            client.call_model("agent_1", "gemini-2.0-flash", messages)
+            client.call_model("agent_1", "gemini-2.0-flash", messages)
+            client.call_model("agent_2", "gemini-2.5-flash", messages)
             
             usage_data = self.usage_tracker.to_dict()
             
-            # Check that both models are tracked
-            self.assertIn("gemini-2.0-flash", usage_data)
-            self.assertIn("gemini-2.5-flash", usage_data)
+            # Check that both agents are tracked
+            self.assertIn("agent_1", usage_data)
+            self.assertIn("agent_2", usage_data)
             
-            # gemini-2.0-flash should have 2 calls
-            self.assertEqual(usage_data["gemini-2.0-flash"]["numApiCalls"], 2)
+            # agent_1 should have 2 calls
+            self.assertEqual(usage_data["agent_1"]["numApiCalls"], 2)
             
-            # gemini-2.5-flash should have 1 call
-            self.assertEqual(usage_data["gemini-2.5-flash"]["numApiCalls"], 1)
+            # agent_2 should have 1 call
+            self.assertEqual(usage_data["agent_2"]["numApiCalls"], 1)
 
 
 class TestMCPClientIntegrationWithRealAPI(unittest.TestCase):
@@ -183,7 +183,7 @@ class TestMCPClientIntegrationWithRealAPI(unittest.TestCase):
         messages = [{"role": "user", "content": "Say 'Hello, World!' and nothing else."}]
         
         try:
-            result = client.call_model("gemini-2.0-flash", messages)
+            result = client.call_model("test_agent", "gemini-2.0-flash", messages)
             
             # Basic checks
             self.assertIsInstance(result, str)
@@ -193,9 +193,9 @@ class TestMCPClientIntegrationWithRealAPI(unittest.TestCase):
             
             # Check usage tracking
             usage_data = self.usage_tracker.to_dict()
-            self.assertIn("gemini-2.0-flash", usage_data)
-            self.assertEqual(usage_data["gemini-2.0-flash"]["numApiCalls"], 1)
-            self.assertGreater(usage_data["gemini-2.0-flash"]["totalTokens"], 0)
+            self.assertIn("test_agent", usage_data)
+            self.assertEqual(usage_data["test_agent"]["numApiCalls"], 1)
+            self.assertGreater(usage_data["test_agent"]["totalTokens"], 0)
             
             print(f"SUCCESS: Real API call completed. Response: {result}")
             print(f"Usage stats: {usage_data}")

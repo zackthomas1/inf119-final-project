@@ -20,6 +20,7 @@ class CoderAgent:
     logger.info(f"Initializing CoderAgent with model: {model_name}")
     self.mcp_client = mcp_client
     self.model_name = model_name
+    self.agent_name = "coder_agent"
 
   def generate_code(self, requirements_text: str, plan: Dict[str, any]) -> str:
     """
@@ -52,7 +53,7 @@ class CoderAgent:
     
     for attempt in range(max_retries):
         logger.info(f"Generation attempt {attempt + 1}/{max_retries}")
-        response_text = self.mcp_client.call_model(self.model_name, messages)
+        response_text = self.mcp_client.call_model(self.agent_name, self.model_name, messages)
         
         # Validate syntax
         cleaned_code = strip_markdown_formatting(response_text)
@@ -106,7 +107,7 @@ class CoderAgent:
     
     for attempt in range(max_retries):
         logger.info(f"Fix attempt {attempt + 1}/{max_retries}")
-        response_text = self.mcp_client.call_model(self.model_name, messages)
+        response_text = self.mcp_client.call_model(self.agent_name, self.model_name, messages)
         
         # Validate syntax
         cleaned_code = strip_markdown_formatting(response_text)
