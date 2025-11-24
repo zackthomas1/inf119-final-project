@@ -1,8 +1,17 @@
-# Coordinates the multi-agent workflow:
-#   1. PlannerAgent -> produce plan.
-#   2. CoderAgent   -> generate application code.
-#   3. TesterAgent  -> generate test code.
-# Also writes the generated code to disk and returns all artifacts.
+"""
+File: orchestrator.py
+Authors: 
+    - [Zachery Thomas] ([47642149])
+    - [Collin Vinh Tran] ([47304556])
+    - [Jenny Thao Ly] ([83605957])
+    - [Lina Nguyen] ([70703520])
+Description: [Coordinates the multi-agent workflow:
+1. PlannerAgent -> produce plan.
+2. CoderAgent   -> generate application code.
+3. TesterAgent  -> generate test code.
+Also writes the generated code to disk and returns all artifacts.
+]
+"""
 
 from typing import Tuple, Dict, Any
 import os
