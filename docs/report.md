@@ -48,7 +48,7 @@ The system utilizes a "Specialist Architecture" where different LLM models are a
 
 ### Tools and MCP Usage
 The agents interact with the models via a custom **Model Context Protocol (MCP) Client** (`mcp_client.py`).
-*   **MCP?**: The `MCPClient` acts as a standardized abstraction layer. It handles authentication, message formatting (converting system/user/assistant roles to the model's expected format), and API communication. This allows the agents to be independent of the underlying API details.
+*   **MCP**: The `MCPClient` acts as a standardized abstraction layer. It handles authentication, message formatting (converting system/user/assistant roles to the model's expected format), and API communication. This allows the agents to be independent of the underlying API details.
 *   **Internal Tools**: Agents also use utility functions like `validate_python_syntax` to check their output before passing it downstream, ensuring that syntax errors are caught early.
 
 ## iv. Error Handling
