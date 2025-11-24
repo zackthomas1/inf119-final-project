@@ -1,3 +1,13 @@
+"""
+File: planner_agent.py
+Authors: 
+    - [Zachery Thomas] ([47642149])
+    - [Collin Vinh Tran] ([47304556])
+    - [Jenny Thao Ly] ([83605957])
+    - [Lina Nguyen] ([70703520])
+Description: [What this file does (functions/methods used)]
+"""
+
 # PlannerAgent analyzes natural language requirements and produces
 # a structured development plan for the application.
 

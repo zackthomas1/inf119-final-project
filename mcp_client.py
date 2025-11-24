@@ -1,6 +1,16 @@
-# Module defines a thin wrapper around the MCP framework.
-# The agents use MCPClient instead of talking directly to an LLM.
-# You will plug in the actual MCP libraries / servers here.
+"""
+File: mcp_client.py
+Authors: 
+    - [Zachery Thomas] ([47642149])
+    - [Collin Vinh Tran] ([47304556])
+    - [Jenny Thao Ly] ([83605957])
+    - [Lina Nguyen] ([70703520])
+Description: [
+- Module defines a thin wrapper around the MCP framework.
+- The agents use MCPClient instead of talking directly to an LLM.
+- You will plug in the actual MCP libraries / servers here.
+]
+"""
 
 from typing import List, Dict, Any
 import google.generativeai as genai
