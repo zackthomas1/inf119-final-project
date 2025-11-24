@@ -4,7 +4,10 @@
 
 from typing import List, Dict, Any
 import google.generativeai as genai
+from google.api_core import exceptions
 import os
+import time
+import random
 from model_tracker import UsageTracker
 from logging_config import get_mcp_client_logger
 
@@ -74,7 +77,31 @@ class MCPClient:
             
             # Make the API call
             logger.info("Making API call to Gemini")
-            response = model.generate_content(prompt)
+            
+            max_retries = 5
+            base_delay = 2
+            response = None
+            
+            for attempt in range(max_retries):
+                try:
+                    response = model.generate_content(prompt)
+                    break
+                except exceptions.ResourceExhausted as e:
+                    if attempt == max_retries - 1:
+                        logger.error(f"Resource exhausted after {max_retries} attempts")
+                        raise
+                    
+                    delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                    logger.warning(f"Resource exhausted (429). Retrying in {delay:.2f}s (Attempt {attempt + 1}/{max_retries})")
+                    time.sleep(delay)
+                except Exception as e:
+                    # For other exceptions, we might not want to retry or handle differently
+                    # But for now, let's just re-raise to be safe unless we want to retry 500s too
+                    raise e
+
+            if response is None:
+                 raise RuntimeError("Failed to get response from Gemini API")
+
             response_text = response.text
             logger.info(f"API call successful, response length: {len(response_text)} characters")
             logger.debug(f"Response preview: {response_text[:200]}...")

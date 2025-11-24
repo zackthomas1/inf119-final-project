@@ -1,6 +1,8 @@
 
 import re
 import ast
+import subprocess
+import sys
 
 def strip_markdown_formatting(text: str) -> str:
     """
@@ -42,3 +44,28 @@ def validate_python_syntax(code: str) -> tuple[bool, str]:
         return False, f"SyntaxError: {e.msg} at line {e.lineno}"
     except Exception as e:
         return False, f"Validation Error: {str(e)}"
+
+def run_generated_tests(test_file_path: str = "generated/test_generated_app.py") -> tuple[bool, str]:
+    """
+    Runs the generated tests using pytest.
+    Returns (True, output) if tests pass, (False, output) if they fail.
+    """
+    try:
+        # Run pytest as a subprocess
+        result = subprocess.run(
+            [sys.executable, "-m", "pytest", test_file_path],
+            capture_output=True,
+            text=True,
+            timeout=30  # Timeout to prevent infinite loops in tests
+        )
+        
+        # Combine stdout and stderr
+        output = result.stdout + result.stderr
+        
+        # Return True if exit code is 0 (all tests passed)
+        return result.returncode == 0, output
+        
+    except subprocess.TimeoutExpired:
+        return False, "Tests timed out after 30 seconds."
+    except Exception as e:
+        return False, f"Failed to run tests: {str(e)}"

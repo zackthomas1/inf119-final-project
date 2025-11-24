@@ -13,7 +13,7 @@ from agents.planner_agent import PlannerAgent
 from logging_config import get_orchestrator_logger
 from agents.coder_agent import CoderAgent
 from agents.tester_agent import TesterAgent
-from utils import strip_markdown_formatting
+from utils import strip_markdown_formatting, run_generated_tests
 
 logger = get_orchestrator_logger()
 
@@ -79,6 +79,35 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
 
     with open("generated/test_generated_app.py", "w", encoding="utf-8") as f:
         f.write(generated_tests)
+
+    # Self-Healing Loop: Run tests and fix code if they fail
+    MAX_FIX_RETRIES = 3
+    
+    for attempt in range(MAX_FIX_RETRIES):
+        logger.info(f"Running tests (Attempt {attempt + 1}/{MAX_FIX_RETRIES})")
+        success, output = run_generated_tests()
+        
+        if success:
+            logger.info("Tests passed successfully!")
+            break
+            
+        logger.warning(f"Tests failed. Output preview:\n{output[:500]}...")
+        
+        if attempt < MAX_FIX_RETRIES - 1:
+            logger.info("Requesting code fix from CoderAgent...")
+            try:
+                raw_fixed_code = coder.fix_code(generated_code, output, requirements_text)
+                generated_code = strip_markdown_formatting(raw_fixed_code)
+                
+                # Update the file with fixed code
+                logger.info("Overwriting generated_app.py with fixed code")
+                with open("generated/generated_app.py", "w", encoding="utf-8") as f:
+                    f.write(generated_code)
+            except Exception as e:
+                logger.error(f"Failed to fix code: {str(e)}", exc_info=True)
+                break # Stop loop if fixing fails
+        else:
+            logger.error("Max retries reached. Tests still failing.")
 
     # Prepare JSON-serializable usage report
     logger.info("Preparing usage report")
