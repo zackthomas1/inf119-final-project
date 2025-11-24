@@ -21,10 +21,10 @@ logger = get_app_logger()
 # Log system information at startup
 log_system_info()
 
-def process_requirements(requirements_file : BinaryIO | None, requirements_text: str) -> tuple[str, str, str, str]: 
+def process_requirements(requirements_text: str) -> tuple[str, str, str, str]: 
     """
     gradio callback.
-    Takes either an uploaded file or text area input and runs the pipline
+    Takes text area input and runs the pipline
 
     Returns: 
         - generated code (string)
@@ -34,13 +34,8 @@ def process_requirements(requirements_file : BinaryIO | None, requirements_text:
     """
     logger.info("=== Processing requirements started ===")
     
-    if requirements_file is not None:
-        logger.info("Reading requirements from uploaded file")
-        requirements = requirements_file.read().decode("utf-8")
-        logger.info(f"File content length: {len(requirements)} characters")
-    else:
-        requirements = requirements_text or ""
-        logger.info(f"Using text input, length: {len(requirements)} characters")
+    requirements = requirements_text or ""
+    logger.info(f"Using text input, length: {len(requirements)} characters")
 
     if not requirements.strip():
         logger.warning("No requirements provided - returning error")
@@ -89,23 +84,16 @@ def main():
     
     with gr.Blocks(title="IN4MATX 119 - AI Coder") as demo: 
         gr.Markdown(
-            "# AI Coder (N4MATX 119 Final Project)\n"
-            "Upload the chosen software description or paste the requirements below"
+            "# AI Coder (IN4MATX 119 Final Project)\n"
+            "Upload the chosen software description or paste the requirements below."
             "System will generate Python code, tests, and a model usage report."
         )
 
-        with gr.Row():
-            requirements_file = gr.File(
-                label = "Upload reqruiements file (.txt, .md, etc.)", 
-                file_types=["text"], 
-                type="binary",
-            )
-
-            requirements_text = gr.Textbox(
-                label = "or paste requirements here", 
-                lines = 15, 
-                placeholder="Paste software description and requirements..."
-            )
+        requirements_text = gr.Textbox(
+            label = "Paste requirements here", 
+            lines = 15, 
+            placeholder="Paste software description and requirements..."
+        )
 
         run_button = gr.Button("Generate Code & Tests")
 
@@ -125,7 +113,7 @@ def main():
 
         run_button.click(
             fn=process_requirements,
-            inputs=[requirements_file, requirements_text],
+            inputs=[requirements_text],
             outputs=[
                 generated_code_output,
                 generate_tests_output,

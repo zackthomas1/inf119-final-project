@@ -13,6 +13,7 @@ Description: [What this file does (functions/methods used)]
 from typing import Dict, Any
 from mcp_client import MCPClient
 from logging_config import get_tester_agent_logger
+from utils import strip_markdown_formatting, validate_python_syntax
 
 logger = get_tester_agent_logger()
 
@@ -28,6 +29,7 @@ class TesterAgent:
         logger.info(f"Initializing TesterAgent with model: {model_name}")
         self.mcp_client = mcp_client
         self.model_name = model_name
+        self.agent_name = "tester_agent"
 
     def generate_tests(self, requirements_text: str, code_text: str) -> str:
         """
@@ -57,4 +59,28 @@ class TesterAgent:
             {"role": "user", "content": user_prompt},
         ]
 
-        return self.mcp_client.call_model(self.model_name, messages)
+        max_retries = 3
+        
+        for attempt in range(max_retries):
+            logger.info(f"Test generation attempt {attempt + 1}/{max_retries}")
+            response_text = self.mcp_client.call_model(self.agent_name, self.model_name, messages)
+            
+            # Validate syntax
+            cleaned_code = strip_markdown_formatting(response_text)
+            is_valid, error_msg = validate_python_syntax(cleaned_code)
+            
+            if is_valid:
+                logger.info("Generated tests passed syntax validation")
+                return response_text
+                
+            logger.warning(f"Generated tests failed syntax validation: {error_msg}")
+            
+            if attempt < max_retries - 1:
+                messages.append({"role": "assistant", "content": response_text})
+                messages.append({
+                    "role": "user", 
+                    "content": f"The test code you generated has a syntax error: {error_msg}\nPlease fix the syntax error and output the full corrected test code."
+                })
+                
+        logger.error("Failed to generate valid test syntax after max retries")
+        return response_text
