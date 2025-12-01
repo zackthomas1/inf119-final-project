@@ -48,7 +48,7 @@ def process_requirements(requirements_text: str) -> tuple[str, str, str, str]:
 
     logger.info("Starting pipeline execution")
     try:
-        generated_code, generated_tests, usage_report = run_pipeline(requirements)
+        generated_code, generated_tests, usage_report, app_filename, test_filename = run_pipeline(requirements)
         logger.info("Pipeline execution completed successfully")
     except Exception as e:
         logger.error(f"Pipeline execution failed: {str(e)}", exc_info=True)
@@ -62,15 +62,15 @@ def process_requirements(requirements_text: str) -> tuple[str, str, str, str]:
     usage_json_str = json.dumps(usage_report, indent=2)
 
     instructions = (
-        "How to run the generated code and tests:\n\n"
-        "1. After running this UI, the system writes files into the 'generated/' folder:\n"
-        "   - generated/generated_app.py\n"
-        "   - generated/test_generated_app.py\n\n"
-        "2. To run the application (if it has a main function):\n"
-        "   - python generated/generated_app.py\n\n"
-        "3. To run the tests (requires pytest installed):\n"
-        "   - python -m tests.run_tests\n"
-        "   (Or simply: pytest generated/test_generated_app.py)\n"
+        f"How to run the generated code and tests:\n\n"
+        f"1. The system has written files into the 'generated/' folder:\n"
+        f"   - generated/{app_filename}\n"
+        f"   - generated/{test_filename}\n\n"
+        f"2. To run the application (if it has a main function):\n"
+        f"   - python generated/{app_filename}\n\n"
+        f"3. To run the tests (requires pytest installed):\n"
+        f"   - pytest generated/{test_filename}\n\n"
+        f"Note: Each run creates new timestamped files, so previous versions are preserved.\n"
     )
 
     logger.info("=== Processing requirements completed ===")

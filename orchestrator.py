@@ -15,6 +15,7 @@ Also writes the generated code to disk and returns all artifacts.
 
 from typing import Tuple, Dict, Any
 import os
+from datetime import datetime
 
 from model_tracker import UsageTracker
 from mcp_client import MCPClient
@@ -26,7 +27,7 @@ from utils import strip_markdown_formatting, run_generated_tests
 
 logger = get_orchestrator_logger()
 
-def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
+def run_pipeline(requirements_text: str) -> tuple[str, str, str, str, str]:
     """
     Run the full multi-agent pipeline on a single set of requirements. 
 
@@ -34,6 +35,8 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
         - genreated_code: Python soure code for app
         - genreated_tests: Python source code for tests
         - usage_report: Dict matching JSON structure
+        - app_filename: Name of generated app file
+        - test_filename: Name of generated test file
     """
     logger.info("=== Starting multi-agent pipeline ===")
     logger.debug(f"Requirements preview: {requirements_text[:200]}...")
@@ -80,13 +83,23 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
     raw_generated_tests = tester.generate_tests(requirements_text, generated_code)
     generated_tests = strip_markdown_formatting(raw_generated_tests)
 
-    # persist artifacts
+    # persist artifacts with timestamp
     logger.info("Persisting python code and test")
     os.makedirs("generated", exist_ok=True)
-    with open("generated/generated_app.py", "w", encoding="utf-8") as f:
+    
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    app_filename = f"generated_app_{timestamp}.py"
+    test_filename = f"test_generated_app_{timestamp}.py"
+    
+    app_filepath = os.path.join("generated", app_filename)
+    test_filepath = os.path.join("generated", test_filename)
+    
+    logger.info(f"Writing app to: {app_filepath}")
+    with open(app_filepath, "w", encoding="utf-8") as f:
         f.write(generated_code)
 
-    with open("generated/test_generated_app.py", "w", encoding="utf-8") as f:
+    logger.info(f"Writing tests to: {test_filepath}")
+    with open(test_filepath, "w", encoding="utf-8") as f:
         f.write(generated_tests)
 
     # Self-Healing Loop: Run tests and fix code if they fail
@@ -109,8 +122,8 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
                 generated_code = strip_markdown_formatting(raw_fixed_code)
                 
                 # Update the file with fixed code
-                logger.info("Overwriting generated_app.py with fixed code")
-                with open("generated/generated_app.py", "w", encoding="utf-8") as f:
+                logger.info(f"Overwriting {app_filepath} with fixed code")
+                with open(app_filepath, "w", encoding="utf-8") as f:
                     f.write(generated_code)
             except Exception as e:
                 logger.error(f"Failed to fix code: {str(e)}", exc_info=True)
@@ -128,4 +141,4 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str]:
         usage_report = {}
 
     logger.info("=== Multi-agent pipeline completed ===")
-    return generated_code, generated_tests, usage_report
+    return generated_code, generated_tests, usage_report, app_filename, test_filename
