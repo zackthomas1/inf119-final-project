@@ -79,20 +79,22 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str, str, str]:
     raw_generated_code = coder.generate_code(requirements_text, plan)
     generated_code = strip_markdown_formatting(raw_generated_code)
 
+    # Generate filenames with timestamp early so TesterAgent knows the module name
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    app_module_name = f"generated_app_{timestamp}"
+    app_filename = f"{app_module_name}.py"
+    test_filename = f"test_{app_module_name}.py"
+    
+    app_filepath = os.path.join("generated", app_filename)
+    test_filepath = os.path.join("generated", test_filename)
+
     # TesterAgent: generate test suite
-    raw_generated_tests = tester.generate_tests(requirements_text, generated_code)
+    raw_generated_tests = tester.generate_tests(requirements_text, generated_code, app_module_name)
     generated_tests = strip_markdown_formatting(raw_generated_tests)
 
     # persist artifacts with timestamp
     logger.info("Persisting python code and test")
     os.makedirs("generated", exist_ok=True)
-    
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    app_filename = f"generated_app_{timestamp}.py"
-    test_filename = f"test_generated_app_{timestamp}.py"
-    
-    app_filepath = os.path.join("generated", app_filename)
-    test_filepath = os.path.join("generated", test_filename)
     
     logger.info(f"Writing app to: {app_filepath}")
     with open(app_filepath, "w", encoding="utf-8") as f:
@@ -107,7 +109,7 @@ def run_pipeline(requirements_text: str) -> tuple[str, str, str, str, str]:
     
     for attempt in range(MAX_FIX_RETRIES):
         logger.info(f"Running tests (Attempt {attempt + 1}/{MAX_FIX_RETRIES})")
-        success, output = run_generated_tests()
+        success, output = run_generated_tests(test_filepath)
         
         if success:
             logger.info("Tests passed successfully!")

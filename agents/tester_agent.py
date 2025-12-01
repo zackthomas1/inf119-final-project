@@ -31,7 +31,7 @@ class TesterAgent:
         self.model_name = model_name
         self.agent_name = "tester_agent"
 
-    def generate_tests(self, requirements_text: str, code_text: str) -> str:
+    def generate_tests(self, requirements_text: str, code_text: str, module_name: str = "generated_app") -> str:
         """
         Ask the model to produce a Python test file (e.g., pytest style)
         that imports the generated module and tests at least 10 behaviors.
@@ -42,7 +42,7 @@ class TesterAgent:
             "You are a senior QA engineer writing unit tests in Python. "
             "Generate at least 10 tests for the provided module. "
             "Use pytest style functions (test_*). "
-            "Assume the main module file is named 'generated_app.py'."
+            f"Assume the main module file is named '{module_name}.py' and import from '{module_name}'."
         )
 
         user_prompt = (
