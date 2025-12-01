@@ -4,6 +4,77 @@ Project implements a multi-agent AI system that generates Python applications an
 ## Project Prompt
 BudgetMaster is a budgeting software application that helps individuals effectively manage their finances by providing comprehensive budgeting features. It allows users to input their income and expenses, categorize them, and set budget goals. The software provides visual representations of budget breakdowns and generates reports to track spending patterns. With BudgetMaster, users can make informed financial decisions and stay on track to achieve their financial goals.
 
+## Additional Requirements Specifications Prompts
+User Interface:
+- Command-line interface (CLI) with interactive menu system
+- Clear menu options for all operations
+- Input validation and error handling for all user inputs
+- Confirmation prompts for destructive operations (delete, edit)
+
+Data Persistence:
+- Store all data in JSON format
+- Save transactions to 'transactions.json'
+- Save budget goals to 'budget_goals.json'
+- Data must persist between program sessions
+- Automatically create JSON files if they don't exist
+
+Transaction Management:
+- Each transaction must include:
+  - Date (YYYY-MM-DD format)
+  - Name/Description (string)
+  - Amount (float, positive for income, can be negative for expenses)
+  - Category (string from predefined or custom categories)
+- Display all transactions in a formatted table
+
+Categories
+- Predefined categories: Food, Transport, Entertainment, Utilities, Healthcare, Shopping, Savings, Income
+
+Budget Goals:
+- Set monthly spending limits per category
+- Display current spending vs. budget for each category
+
+Visual Representations:
+- ASCII art charts displayed directly in terminal
+- Pie chart showing spending breakdown by category (using ASCII characters)
+- Bar chart comparing spending across categories
+- All visualizations should be clear and readable in terminal
+
+Reports:
+- Monthly summary showing:
+  - Total income
+  - Total expenses
+  - Spending by category
+
+User Experience Requirements:
+- Menu-driven navigation with numbered options
+- Clear prompts for user input
+- Validation of all inputs (dates, amounts, categories)
+- Helpful error messages
+- Option to return to main menu from any screen
+- Clean, organized output formatting
+
+Required Features List:
+1. Add income transaction
+2. Add expense transaction
+3. View all transactions
+4. Edit existing transaction
+5. Delete transaction
+6. Set budget goal for category
+7. View budget status for all categories
+8. Generate monthly summary report
+9. Filter transactions by category
+10. Exit program
+
+Testing Requirements:
+- At least 10 test cases covering:
+  - Adding transactions
+  - Editing transactions
+  - Deleting transactions
+  - Setting budget goals
+  - Calculating totals and summaries
+  - Data persistence (save/load from JSON)
+  - Input validation
+
 # Setup Instructions
 
 ## Quick Start Guide

@@ -2,7 +2,6 @@
 .vscode/
 
 # project specific
-generated/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
