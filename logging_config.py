@@ -5,9 +5,7 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [
-- Module provides consistent logging setup across all components
-]
+Description: Provides a centralized logging configuration for the application. It sets up file and console logging with rotation, custom formatting, and helper functions to get loggers for specific components.
 """
 
 import logging

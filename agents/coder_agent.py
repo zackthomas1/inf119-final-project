@@ -5,7 +5,7 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [What this file does (functions/methods used)]
+Description: Implements the CoderAgent class, which uses an LLM to generate Python code based on structured requirements and plans. It handles code generation, syntax validation, and iterative fixing of code based on test failures.
 """
 
 # CoderAgent takes structured requirements generatedby PlannerAgent

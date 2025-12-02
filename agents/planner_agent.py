@@ -5,7 +5,7 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [What this file does (functions/methods used)]
+Description: Implements the PlannerAgent class, responsible for analyzing natural language requirements and generating a structured development plan using an LLM. It outlines main components, responsibilities, and test scenarios.
 """
 
 # PlannerAgent analyzes natural language requirements and produces

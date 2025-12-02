@@ -5,11 +5,7 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [
-- Module defines a thin wrapper around the MCP framework.
-- The agents use MCPClient instead of talking directly to an LLM.
-- You will plug in the actual MCP libraries / servers here.
-]
+Description: A wrapper around the Google Generative AI (Gemini) API. It handles model initialization, message formatting, API calls with retries for rate limits, and tracks token usage via the UsageTracker.
 """
 
 from typing import List, Dict, Any

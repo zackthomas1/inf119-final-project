@@ -5,7 +5,7 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [What this file does (functions/methods used)]
+Description: Main entry point for the AI Coder application. This file initializes the Gradio web interface, handles user input for software requirements, triggers the generation pipeline via the orchestrator, and displays the resulting code, tests, and usage metrics to the user.
 """
 
 import gradio as gr
@@ -108,7 +108,7 @@ def main():
             label="Model usage JSON", language="json"
         )
         instructions_output = gr.Textbox(
-            label="How to run the gernated code and tests", lines=10
+            label="How to run the generated code and tests", lines=10
         )
 
         run_button.click(

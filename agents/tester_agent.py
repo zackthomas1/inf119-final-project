@@ -5,7 +5,7 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [What this file does (functions/methods used)]
+Description: Implements the TesterAgent class, which generates comprehensive unit tests (pytest style) for the code produced by the CoderAgent. It ensures the generated tests are syntactically valid and cover the specified requirements.
 """
 
 # TesterAgent generates test cases for the code produced by CoderAgent.

@@ -5,12 +5,7 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [Coordinates the multi-agent workflow:
-1. PlannerAgent -> produce plan.
-2. CoderAgent   -> generate application code.
-3. TesterAgent  -> generate test code.
-Also writes the generated code to disk and returns all artifacts.
-]
+Description: Coordinates the multi-agent workflow. It manages the interaction between the PlannerAgent, CoderAgent, and TesterAgent to generate code and tests from requirements. It also handles file persistence and the self-healing loop where code is fixed based on test failures.
 """
 
 from typing import Tuple, Dict, Any

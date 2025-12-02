@@ -5,8 +5,7 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [
-]
+Description: Contains utility functions for the application, including markdown stripping from LLM responses, Python syntax validation, and a helper to run generated tests using pytest.
 """
 
 import re

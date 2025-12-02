@@ -5,10 +5,7 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [
-- Defines a utility class that tracks how often each
-- model is called and how many tokens are used in total per model.
-]
+Description: Defines the UsageTracker class to monitor model usage statistics. It tracks the number of API calls and total tokens consumed by each model agent throughout the application's lifecycle.
 """
 
 # Defines a utility class that tracks how often each
