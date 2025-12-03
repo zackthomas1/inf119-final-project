@@ -5,7 +5,9 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [What this file does (functions/methods used)]
+Description: Unit and integration test suite for MCPClient. Tests API initialization, 
+             model calls, error handling, and usage tracking with both mocked and real 
+             Gemini API calls.
 """
 
 """
