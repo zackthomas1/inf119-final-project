@@ -5,7 +5,9 @@ Authors:
     - [Collin Vinh Tran] ([47304556])
     - [Jenny Thao Ly] ([83605957])
     - [Lina Nguyen] ([70703520])
-Description: [What this file does (functions/methods used)]
+Description: Test runner script that executes the MCP Client unit tests with proper 
+             environment setup. Loads API keys from .env file and runs all test files 
+             in the tests/ directory using unittest framework.
 """
 
 #!/usr/bin/env python3
